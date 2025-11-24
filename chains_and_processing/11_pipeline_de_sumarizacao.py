@@ -56,19 +56,19 @@ llm = ChatOpenAI(model="gpt-5-nano", temperature=0)
 
 # LCEL map stage: summarize each chunk
 map_prompt = PromptTemplate.from_template(
-    "Summarize the following text in a concise manner:\n\n{context}"
+    "Summarize the following text in a concise manner:\n\n{context}" # variable 'context' is used here to hold the chunk text
 )
 map_chain = map_prompt | llm | StrOutputParser()
 
 prepare_map_inputs = RunnableLambda(
-    lambda docs: [{"context": doc.page_content} for doc in docs]
+    lambda docs: [{"context": doc.page_content} for doc in docs] # load documents into 'context' variable
 )   
 map_stage = prepare_map_inputs | map_chain.map()
 
 
 # LCEL reduce stage: combine summaries
 reduce_prompt = PromptTemplate.from_template(
-    "Combine the following summaries, generate a final concise summary:\n\n{context}"
+    "Combine the following summaries, generate a final concise summary:\n\n{context}" 
 )
 reduce_chain = reduce_prompt | llm | StrOutputParser()
 
